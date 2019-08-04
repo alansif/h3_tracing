@@ -5,7 +5,7 @@ module.exports = {
 		open: false, //配置自动启动浏览器 
 		proxy: {
 			'/api': {
-					target: 'http://192.168.160.90:8665'
+					target: 'http://127.0.0.1:8865'
 			} 
 		}
 	},
