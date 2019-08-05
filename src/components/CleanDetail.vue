@@ -1,5 +1,5 @@
 <template>
-		<v-dialog :value.sync="visible" width="640" scrollable>
+		<v-dialog :value.sync="visible" width="640" scrollable persistent>
 			<v-card>
 				<v-card-title class="title grey lighten-2" dense>洗消循环明细</v-card-title>
 				<v-card-text style="height: 800px" id="stepstable">
