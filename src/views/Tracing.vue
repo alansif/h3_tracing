@@ -72,7 +72,15 @@ export default {
 				})
 				.catch(error => {
 					console.dir(error);
-				});			
+				});
+			this.$axios.get('/api/v1/tianzhu',{params:{
+					endoscope: this.endoscope
+				}})
+				.then(response => {
+				})
+				.catch(error => {
+					console.dir(error);
+				});
 		},
 		showdata(d) {
 			const r = d.flatMap(x => {
