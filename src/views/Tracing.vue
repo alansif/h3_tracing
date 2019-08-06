@@ -11,30 +11,22 @@
 			</v-layout>
 		</v-container>
 		<v-divider/>
-		<v-timeline align-top :dense="$vuetify.breakpoint.smAndDown" reverse style="width:800px;margin-left:40px;">
+		<v-timeline align-top :dense="$vuetify.breakpoint.smAndDown" style="width:800px;margin-left:40px;">
 			<template v-for="(item, i) in items">
-				<v-timeline-item :color="item[0].color" :icon="item[0].icon" fill-dot>
-					<v-card :color="item[0].color" dark>
-						<v-card-title class="subtitle-1 justify-end">{{item[0].title + '　' + item[0].date + ' ' + item[0].time}}</v-card-title>
+				<v-timeline-item :color="item.color" :icon="item.icon"
+					:fill-dot="!item.small"
+					:small="item.small"
+					:left="item.side==='left'"
+					:right="item.side==='right'">
+					<v-card :color="item.color" dark>
+						<v-card-title v-if="item.side==='left'" class="subtitle-1 justify-end">{{item.title + '　' + item.date + ' ' + item.time}}</v-card-title>
+						<v-card-title v-else class="subtitle-1">{{item.date + ' ' + item.time + '　' + item.title}}</v-card-title>
 						<v-divider/>
 						<v-card-text class="white text--primary">
 							<v-layout>
-								<v-flex align-self-center>{{item[0].content}}</v-flex>
+								<v-flex align-self-center>{{item.content}}</v-flex>
 								<v-spacer/>
-								<v-btn :color="item[0].color" class="mx-0" outlined @click.stop="showdetail(item[0].data)">详情</v-btn>
-							</v-layout>
-						</v-card-text>
-					</v-card>
-				</v-timeline-item>
-				<v-timeline-item :color="item[1].color" small>
-					<v-card :color="item[1].color" dark>
-						<v-card-title class="subtitle-1">{{item[1].date + ' ' + item[1].time + '　' + item[1].title}}</v-card-title>
-						<v-divider/>
-						<v-card-text class="white text--primary">
-							<v-layout>
-								<v-flex align-self-center>{{item[1].content}}</v-flex>
-								<v-spacer/>
-								<v-btn :color="item[1].color" class="mx-0" outlined @click.stop="showdetail(item[1].data)">详情</v-btn>
+								<v-btn :color="item.color" class="mx-0" outlined @click.stop="showdetail(item.data)">详情</v-btn>
 							</v-layout>
 						</v-card-text>
 					</v-card>
@@ -83,7 +75,7 @@ export default {
 				});			
 		},
 		showdata(d) {
-			const r = d.map(x => {
+			const r = d.flatMap(x => {
 				let dif = Date.parse(x.CycleCompletionDate+'T'+x.TimeEnd) - Date.parse(x.CycleCompletionDate+'T'+x.TimeBegin);
 				dif /= 1000;
 				let m = Math.floor(dif / 60);
@@ -97,7 +89,9 @@ export default {
 					color: x.CYCLE === 'FAIL' ? 'red lighten-2' : 'green lighten-1',
 					icon: 'mdi-wiper-wash',
 					content: '洗消设备ID:　' + x.MachineSerialNumber,
-					data: x
+					data: x,
+					side: "left",
+					small: false
 				},
 				{
 					title: '洗消结束',
@@ -105,7 +99,9 @@ export default {
 					time: x.TimeEnd,
 					color: x.CYCLE === 'FAIL' ? 'red lighten-2' : 'green lighten-1',
 					content: `洗消时长:　 ${m}分${s}秒`,
-					data: x
+					data: x,
+					side: "right",
+					small: true
 				}];
 				return a;
 			});
