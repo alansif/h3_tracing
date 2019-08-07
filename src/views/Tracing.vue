@@ -23,10 +23,13 @@
 						<v-card-title v-else class="subtitle-1">{{item.date + ' ' + item.time + '　' + item.title}}</v-card-title>
 						<v-divider/>
 						<v-card-text class="white text--primary">
-							<v-layout>
-								<v-flex align-self-center>{{item.content}}</v-flex>
-								<v-spacer/>
-								<v-btn :color="item.color" class="mx-0" outlined @click.stop="showdetail(item.data)">详情</v-btn>
+							<v-layout wrap fill-height align-content-center>
+								<v-flex xs10 xl10>
+									<p v-for="cnt in item.contents" class="my-1">{{cnt}}</p>
+								</v-flex>
+								<v-flex xs2 xl2 align-self-end>
+									<v-btn :color="item.color" class="mx-0" small outlined @click.stop="showdetail(item.data)">详情</v-btn>
+								</v-flex>
 							</v-layout>
 						</v-card-text>
 					</v-card>
@@ -73,7 +76,7 @@ export default {
 				.catch(error => {
 					console.dir(error);
 				});
-			this.$axios.get('/api/v1/tianzhu',{params:{
+			this.$axios.get('/api/v1/timeline',{params:{
 					endoscope: this.endoscope
 				}})
 				.then(response => {
@@ -96,7 +99,7 @@ export default {
 					time: x.TimeBegin,
 					color: x.CYCLE === 'FAIL' ? 'red lighten-2' : 'green lighten-1',
 					icon: 'mdi-wiper-wash',
-					content: '洗消设备ID:　' + x.MachineSerialNumber,
+					contents: ['洗消设备ID:　' + x.MachineSerialNumber],
 					data: x,
 					side: "left",
 					small: false
@@ -106,7 +109,7 @@ export default {
 					date: x.CycleCompletionDate,
 					time: x.TimeEnd,
 					color: x.CYCLE === 'FAIL' ? 'red lighten-2' : 'green lighten-1',
-					content: `洗消时长:　 ${m}分${s}秒`,
+					contents: [`洗消时长:　 ${m}分${s}秒`],
 					data: x,
 					side: "right",
 					small: true
@@ -114,6 +117,11 @@ export default {
 				return a;
 			});
 			this.items = r;
+		},
+		showdata2(d) {
+			const r = d.map(x => {
+
+			});
 		},
 		showdetail(row) {
 			this.dialog = true;
