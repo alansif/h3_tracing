@@ -3,6 +3,46 @@
 		<v-container grid-list-md>
 			<v-layout wrap style="line-height:0px">
 				<v-flex xs6 sm4 md2>
+				<v-menu
+					v-model="datemenu1"
+					transition="scale-transition"
+					offset-y
+					max-width="290"
+				>
+					<template v-slot:activator="{ on }">
+					<v-text-field
+						v-model="date1"
+						label="开始日期"
+						prepend-inner-icon="event"
+						readonly
+						hide-details
+						v-on="on"
+					></v-text-field>
+					</template>
+					<v-date-picker v-model="date1" @input="datemenu1 = false"></v-date-picker>
+				</v-menu>
+				</v-flex>
+				<v-flex xs6 sm4 md2>
+				<v-menu
+					v-model="datemenu2"
+					transition="scale-transition"
+					offset-y
+					max-width="290"
+				>
+					<template v-slot:activator="{ on }">
+					<v-text-field
+						v-model="date2"
+						label="截止日期"
+						prepend-inner-icon="event"
+						readonly
+						hide-details
+						v-on="on" 
+					></v-text-field>
+					</template>
+					<v-date-picker v-model="date2" @input="datemenu2 = false"></v-date-picker>
+				</v-menu>
+				</v-flex>
+				<v-flex xs6 sm4 md2>
 					<v-select v-model="endoscope" :items="endoscopes" label="内镜ID" hide-details placeholder="全部"/>
 				</v-flex>
 				<v-flex xs6 sm4 md2 align-self-end>
@@ -13,22 +53,26 @@
 		<v-divider/>
 		<v-timeline align-top :dense="$vuetify.breakpoint.smAndDown" style="width:800px;margin-left:40px;">
 			<template v-for="(item, i) in items">
-				<v-timeline-item :color="item.color" :icon="item.icon"
-					:fill-dot="!item.small"
-					:small="item.small"
-					:left="item.side==='left'"
-					:right="item.side==='right'">
-					<v-card :color="item.color" dark>
-						<v-card-title v-if="item.side==='left'" class="subtitle-1 justify-end">{{item.title + '　' + item.date + ' ' + item.time}}</v-card-title>
-						<v-card-title v-else class="subtitle-1">{{item.date + ' ' + item.time + '　' + item.title}}</v-card-title>
+				<v-timeline-item :color="item.apprn.color" :icon="item.apprn.icon"
+					:fill-dot="!!item.apprn.icon"
+					:small="!item.apprn.icon"
+					:left="item.apprn.side==='left'"
+					:right="item.apprn.side==='right'">
+					<v-card :color="item.apprn.color" dark>
+						<v-card-title v-if="item.apprn.side==='left'" class="subtitle-1 justify-end">
+							{{item.title + '　' + item.datetime.substring(0,19).replace('T', ' ')}}
+						</v-card-title>
+						<v-card-title v-else class="subtitle-1">
+							{{item.datetime.substring(0,19).replace('T', ' ') + '　' + item.title}}
+						</v-card-title>
 						<v-divider/>
 						<v-card-text class="white text--primary">
 							<v-layout wrap fill-height align-content-center>
 								<v-flex xs10 xl10>
 									<p v-for="cnt in item.contents" class="my-1">{{cnt}}</p>
 								</v-flex>
-								<v-flex xs2 xl2 align-self-end>
-									<v-btn :color="item.color" class="mx-0" small outlined @click.stop="showdetail(item.data)">详情</v-btn>
+								<v-flex v-if="!!item.data" xs2 xl2 align-self-end>
+									<v-btn :color="item.apprn.color" class="mx-0" small outlined @click.stop="showdetail(item.data)">详情</v-btn>
 								</v-flex>
 							</v-layout>
 						</v-card-text>
@@ -45,6 +89,10 @@ import CleanDetail from '@/components/CleanDetail.vue'
 
 export default {
 	data: () => ({
+		date1: new Date().toISOString().substr(0, 10),
+		datemenu1: false,
+		date2: new Date().toISOString().substr(0, 10),
+		datemenu2: false,
 		items: [],
 		endoscopes: [],
 		endoscope: '',
@@ -66,62 +114,37 @@ export default {
 	methods: {
 		query() {
 			if (this.endoscope.length === 0) return;
-			this.$axios.get('/api/v1/query',{params:{
-					endoscope: this.endoscope
-				}})
-				.then(response => {
-					const d = response.data;
-					this.showdata(d);
-				})
-				.catch(error => {
-					console.dir(error);
-				});
 			this.$axios.get('/api/v1/timeline',{params:{
-					endoscope: this.endoscope
+					endoscope: this.endoscope,
+					fromdate: this.date1,
+					todate: this.date2
 				}})
 				.then(response => {
+					this.items = response.data;
+					this.items.forEach(e => {e.apprn = this.getApprn(e.stage)});
 				})
 				.catch(error => {
 					console.dir(error);
 				});
 		},
-		showdata(d) {
+/*		showdata(d) {
 			const r = d.flatMap(x => {
 				let dif = Date.parse(x.CycleCompletionDate+'T'+x.TimeEnd) - Date.parse(x.CycleCompletionDate+'T'+x.TimeBegin);
 				dif /= 1000;
 				let m = Math.floor(dif / 60);
 				let s = dif % 60;
-				let a = 
-				[
-				{
-					title: '洗消开始',
-					date: x.CycleCompletionDate,
-					time: x.TimeBegin,
-					color: x.CYCLE === 'FAIL' ? 'red lighten-2' : 'green lighten-1',
-					icon: 'mdi-wiper-wash',
-					contents: ['洗消设备ID:　' + x.MachineSerialNumber],
-					data: x,
-					side: "left",
-					small: false
-				},
-				{
-					title: '洗消结束',
-					date: x.CycleCompletionDate,
-					time: x.TimeEnd,
-					color: x.CYCLE === 'FAIL' ? 'red lighten-2' : 'green lighten-1',
-					contents: [`洗消时长:　 ${m}分${s}秒`],
-					data: x,
-					side: "right",
-					small: true
-				}];
-				return a;
+				let a = `洗消时长:　 ${m}分${s}秒`;
 			});
-			this.items = r;
-		},
-		showdata2(d) {
-			const r = d.map(x => {
-
-			});
+		},*/
+		getApprn(stage) {
+			const apprns = [
+				{},
+				{side:'left', color:'lime', icon:'mdi-zodiac-aquarius'},
+				{side:'left', color:'cyan lighten-1', icon:'mdi-wiper-wash'},
+				{side:'right', color:'green accent-4', icon:'mdi-doctor'},
+				{side:'right', color:'amber accent-4'},
+			];
+			return apprns[stage];
 		},
 		showdetail(row) {
 			this.dialog = true;

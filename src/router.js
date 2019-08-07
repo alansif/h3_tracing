@@ -23,11 +23,11 @@ const router = new Router({
 		}
 	]
 });
-
+/*
 router.beforeEach((to, from, next) => {
     if(to.matched.some(res => res.meta.noAuth)||localStorage.getItem('username')){
 		next();
     }
 });
-
+*/
 export default router;
