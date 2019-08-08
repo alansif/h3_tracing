@@ -85,6 +85,7 @@
 			</template>
 		</v-timeline>
 		<CleanDetail :visible.sync="dialog" :row="row"/>
+		<v-snackbar v-model="snackbar" color="blue lighten-1">无符合条件的记录</v-snackbar>
 	</div>
 </template>
 
@@ -101,7 +102,8 @@ export default {
 		endoscopes: [],
 		endoscope: '',
 		dialog: false,
-		row: {}
+		row: {},
+		snackbar: false
 	}),
 	components: {
 		CleanDetail
@@ -126,6 +128,7 @@ export default {
 				.then(response => {
 					this.items = response.data;
 					this.items.forEach(e => {e.apprn = this.getApprn(e.stage)});
+					if (items.length === 0) this.snackbar = true;
 				})
 				.catch(error => {
 					console.dir(error);
