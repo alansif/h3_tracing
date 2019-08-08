@@ -51,7 +51,7 @@
 			</v-layout>
 		</v-container>
 		<v-divider/>
-		<v-timeline align-top :dense="$vuetify.breakpoint.smAndDown" style="width:800px;margin-left:40px;">
+		<v-timeline align-top :dense="$vuetify.breakpoint.smAndDown" style="width:750px;margin-left:40px;">
 			<template v-for="(item, i) in items">
 				<v-timeline-item :color="item.apprn.color" :icon="item.apprn.icon"
 					:fill-dot="!!item.apprn.icon"
@@ -59,11 +59,15 @@
 					:left="item.apprn.side==='left'"
 					:right="item.apprn.side==='right'">
 					<v-card :color="item.apprn.color" dark>
-						<v-card-title v-if="item.apprn.side==='left'" class="subtitle-1 justify-end">
+						<v-card-title v-if="item.apprn.side==='left'" class="subtitle-1">
+							<v-icon v-if="item.warning" color="yellow lighten-2">warning</v-icon>
+							<v-spacer/>
 							{{item.title + '　' + item.datetime.substring(0,19).replace('T', ' ')}}
 						</v-card-title>
 						<v-card-title v-else class="subtitle-1">
 							{{item.datetime.substring(0,19).replace('T', ' ') + '　' + item.title}}
+							<v-spacer/>
+							<v-icon v-if="item.warning" color="yellow lighten-2">warning</v-icon>
 						</v-card-title>
 						<v-divider/>
 						<v-card-text class="white text--primary">

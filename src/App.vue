@@ -4,10 +4,10 @@
 		<v-list>
 			<v-list-item to="/">
 				<v-list-item-action>
-					<v-icon>list</v-icon>
+					<v-icon>mdi-wiper-wash</v-icon>
 				</v-list-item-action>
 				<v-list-item-content>
-					<v-list-item-title>洗消记录</v-list-item-title>
+					<v-list-item-title>机洗记录</v-list-item-title>
 				</v-list-item-content>
 			</v-list-item>
 			<v-list-item to="/tracing">
@@ -15,7 +15,7 @@
 					<v-icon>history</v-icon>
 				</v-list-item-action>
 				<v-list-item-content>
-					<v-list-item-title>追溯</v-list-item-title>
+					<v-list-item-title>全程追溯</v-list-item-title>
 				</v-list-item-content>
 			</v-list-item>
 		</v-list>
