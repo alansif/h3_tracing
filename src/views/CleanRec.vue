@@ -173,7 +173,7 @@
 				}
 			},
 			getColor(c) {
-				if (c === 'PASS') return "lime"
+				if (c === 'PASS') return "limegreen"
 				else if (c === 'FAIL') return "red"
 				else return "blue"
 			},

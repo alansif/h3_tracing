@@ -43,7 +43,7 @@
 				</v-menu>
 				</v-flex>
 				<v-flex xs6 sm4 md2>
-					<v-select v-model="endoscope" :items="endoscopes" label="内镜ID" hide-details placeholder="全部"/>
+					<v-select v-model="endoscope" :items="endoscopes" label="内镜ID" hide-details placeholder="请选择内镜"/>
 				</v-flex>
 				<v-flex xs6 sm4 md2 align-self-end>
 					<v-btn color="primary" @click.stop="query">查询</v-btn>
@@ -62,10 +62,10 @@
 						<v-card-title v-if="item.apprn.side==='left'" class="subtitle-1">
 							<v-icon v-if="item.warning" color="yellow lighten-2">warning</v-icon>
 							<v-spacer/>
-							{{item.title + '　' + item.datetime.substring(0,19).replace('T', ' ')}}
+							{{item.title + ' 　' + item.datetime.substring(0,19).replace('T', ' ')}}
 						</v-card-title>
 						<v-card-title v-else class="subtitle-1">
-							{{item.datetime.substring(0,19).replace('T', ' ') + '　' + item.title}}
+							{{item.datetime.substring(0,19).replace('T', ' ') + ' 　' + item.title}}
 							<v-spacer/>
 							<v-icon v-if="item.warning" color="yellow lighten-2">warning</v-icon>
 						</v-card-title>
@@ -146,10 +146,10 @@ export default {
 		getApprn(stage) {
 			const apprns = [
 				{},
-				{side:'left', color:'lime', icon:'mdi-zodiac-aquarius'},
+				{side:'left', color:'amber accent-4', icon:'mdi-zodiac-aquarius'},
 				{side:'left', color:'cyan lighten-1', icon:'mdi-wiper-wash'},
-				{side:'right', color:'green accent-4', icon:'mdi-doctor'},
-				{side:'right', color:'amber accent-4'},
+				{side:'right', color:'green lighten-1', icon:'mdi-doctor'},
+				{side:'right', color:'brown lighten-2'},
 			];
 			return apprns[stage];
 		},
