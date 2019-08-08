@@ -128,7 +128,7 @@ export default {
 				.then(response => {
 					this.items = response.data;
 					this.items.forEach(e => {e.apprn = this.getApprn(e.stage)});
-					if (items.length === 0) this.snackbar = true;
+					if (this.items.length === 0) this.snackbar = true;
 				})
 				.catch(error => {
 					console.dir(error);
