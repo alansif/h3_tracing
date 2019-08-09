@@ -51,7 +51,7 @@
 			</v-layout>
 		</v-container>
 		<v-divider/>
-		<v-timeline align-top :dense="$vuetify.breakpoint.smAndDown" style="width:750px;margin-left:40px;">
+		<v-timeline align-top :dense="$vuetify.breakpoint.smAndDown" style="max-width:750px;margin-left:32px;">
 			<template v-for="(item, i) in items">
 				<v-timeline-item :color="item.apprn.color" :icon="item.apprn.icon"
 					:fill-dot="!!item.apprn.icon"
