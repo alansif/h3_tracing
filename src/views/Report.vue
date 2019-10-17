@@ -43,8 +43,11 @@
 				</v-menu>
 				</v-flex>
 
-				<v-flex xs6 sm4 md2 align-self-end>
-					<v-btn color="primary" @click.stop="query">查询</v-btn>
+				<v-flex xs4 sm2 md1 align-self-end>
+					<v-btn style="width:100%" color="primary" @click.stop="query">查询</v-btn>
+				</v-flex>
+				<v-flex xs4 sm2 md1 align-self-end>
+					<v-btn style="width:100%" color="primary" :loading="loading" @click.stop="dlpdf">下载</v-btn>
 				</v-flex>
 
 			</v-layout>
@@ -62,6 +65,7 @@
 </template>
 
 <script>
+	import fileDownload from 'js-file-download'
 	import CleanDetail from '@/components/CleanDetail.vue'
 
     export default {
@@ -72,21 +76,23 @@
                     {value:'mdvt.id', text:'id', width:60},
                     {value:'mdvt.CycleCompletionDate', text:'日期', width:90},
                     {value:'mdvt.Category', text:'类别', width:80},
+                    {value:'PatientName', text:'客户姓名', width:100},
+                    {value:'PatientID', text:'客户ID', width:100},
                     {value:'mdvt.EndoscopeType', text:'内镜型号', width:100},
                     {value:'mdvt.SerialNumber', text:'内镜ID', width:90},
-                    {value:'PatientID', text:'患者ID'},
-                    {value:'PatientName', text:'患者姓名'},
-                    {value:'MarrorCleanTime', text:'预处理开始'},
-                    {value:'MarrorCleanStopTime', text:'预处理结束'},
-                    {value:'MarrorCleanPerson', text:'预处理人'},
-                    {value:'CleanDetail', text:'详情', width:480},
+                    {value:'MarrorCleanTime', text:'预处理始', width:100},
+                    {value:'MarrorCleanStopTime', text:'预处理终', width:100},
+                    {value:'MarrorCleanPerson', text:'预处理人', width:100},
+                    {value:'CleanDetail', text:'洗消步骤', width:470},
+                    {value:'CardName', text:'洗消人', width:100},
                 ],
 				date1: new Date().toISOString().substr(0, 10),
 				datemenu1: false,
 				date2: new Date().toISOString().substr(0, 10),
 				datemenu2: false,
 				dialog: false,
-				row: {}
+				row: {},
+				loading: false
             }
         },
 		methods: {
@@ -102,7 +108,23 @@
 					.catch(error => {
 						console.dir(error);
 					});			
-            },
+			},
+			dlpdf() {
+				this.loading = true;
+				this.$axios.post('/api/v1/report/download',{
+						fromdate: this.date1,
+						todate: this.date2
+					}, {responseType:'blob'})
+					.then(response => {
+						fileDownload(response.data, 'report.pdf');
+					})
+					.catch(error => {
+						console.dir(error);
+					})
+					.finally(() => {
+						this.loading = false;
+					});			
+			},
 			rowclick(row) {
 				this.dialog = true;
 				this.row = row.mdvt;
