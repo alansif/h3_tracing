@@ -6,6 +6,7 @@ module.exports = {
 		proxy: {
 			'/api': {
 					target: 'http://192.168.160.201:8865'
+//					target: 'http://127.0.0.1:8865'
 			} 
 		}
 	},

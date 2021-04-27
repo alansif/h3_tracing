@@ -26,6 +26,14 @@
 					<v-list-item-title>洗消报告</v-list-item-title>
 				</v-list-item-content>
 			</v-list-item>
+			<v-list-item to="/soluscope">
+				<v-list-item-action>
+					<v-icon>mdi-wiper-wash</v-icon>
+				</v-list-item-action>
+				<v-list-item-content>
+					<v-list-item-title>索洛普</v-list-item-title>
+				</v-list-item-content>
+			</v-list-item>
 		</v-list>
 	</v-navigation-drawer>
 	<v-app-bar app dense clipped-left dark color="orange darken-4">

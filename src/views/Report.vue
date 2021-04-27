@@ -75,6 +75,7 @@
 				cols:[
                     {value:'mdvt.CycleCompletionDate', text:'日期', width:90},
                     {value:'mdvt.Category', text:'类别', width:80},
+                    {value:'mdvt.MachineSerialNumber', text:'设备ID', width:140},
                     {value:'mdvt.EndoscopeType', text:'内镜型号', width:100},
                     {value:'mdvt.SerialNumber', text:'内镜ID', width:90},
                     {value:'CleanDetail', text:'前洗消步骤', width:470},

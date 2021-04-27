@@ -25,6 +25,11 @@ const router = new Router({
 			path: '/report',
 			name: 'report',
 			component: () => import('./views/Report.vue')
+		},
+		{
+			path: '/soluscope',
+			name: 'soluscope',
+			component: () => import('./views/Soluscope.vue')
 		}
 	]
 });
